@@ -12,10 +12,10 @@ public class ghost_attack : MonoBehaviour
     private NavMeshAgent navAgent;
     private EnemyState enemyState;
 
-    public float walkSpeed = 0.5f;
+    public float walkSpeed = 1f;
     public float attackSpeed = 4f;
 
-    public float chaseDistance = 7f;
+    public float chaseDistance = 10f;
     private float currentChaseDistance;
     public float attackDistance = 1.8f;
     public float chaseAfterAttackDistance = 2f;
@@ -50,7 +50,7 @@ public class ghost_attack : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
         if(enemyState == EnemyState.PATROL)
         {
             patrol();
@@ -71,12 +71,23 @@ public class ghost_attack : MonoBehaviour
         navAgent.isStopped = false;
         navAgent.speed = walkSpeed;
         patrolTimer += Time.deltaTime;
+        //if weve been moving for a while
         if (patrolTimer > patrolTime)
         {
+            //find a new destination
             setNewDest();
+            //reset patrol timer
             patrolTimer = 0f;
 
         }
+        //is the player close?
+        if(Vector3.Distance(transform.position, target.position) <= chaseDistance)
+        {
+            enemyState = EnemyState.CHASE;
+        }
+
+        
+
     }
 
     void attack()
@@ -85,17 +96,46 @@ public class ghost_attack : MonoBehaviour
     }
 
     void chase()
-    {
+    {   
+        //chase player
+        navAgent.isStopped = false;
+        navAgent.speed = attackSpeed;
+        //set dest as player position
+        navAgent.SetDestination(target.position);
+
+        //is the player really close?
+        if (Vector3.Distance(transform.position, target.position) <= attackDistance)
+        {
+            enemyState = EnemyState.CHASE;
+            //reset chase distance
+            if (chaseDistance != currentChaseDistance)
+            {
+                chaseDistance = currentChaseDistance;
+            }
+        } else if (Vector3.Distance(transform.position, target.position) > chaseDistance)
+        {
+            //player has ran away from ghost
+            enemyState = EnemyState.PATROL;
+            //reset patrol timer so new dest is calculated immediately
+            patrolTimer = 20f;
+            if (chaseDistance != currentChaseDistance)
+            {
+                chaseDistance = currentChaseDistance;
+            }
+        }
 
     }
 
     void setNewDest()
-    {
+    {   
+        //get a random radius between min and max
         float randRadius = Random.Range(patrolRadiusMin, patrolRadiusMax);
+        //get a random direction
         Vector3 randDir = Random.insideUnitSphere * randRadius;
         randDir += transform.position;
 
         NavMeshHit navHit;
+        //find navigable area
         NavMesh.SamplePosition(randDir, out navHit, randRadius, -1);
         navAgent.SetDestination(navHit.position);
 
