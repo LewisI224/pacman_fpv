@@ -92,7 +92,22 @@ public class ghost_attack : MonoBehaviour
 
     void attack()
     {
-
+        //stop the enemy moving
+        navAgent.velocity = Vector3.zero;
+        navAgent.isStopped = true;
+        //wait
+        attackTimer += Time.deltaTime;
+        if(attackTimer > waitBeforeAttack)
+        {   
+            //munch the player
+            attackTimer = 0f;
+        }
+        //has the player managed to run away?
+        if(Vector3.Distance(transform.position, target.position) > (attackDistance + chaseAfterAttackDistance))
+        {
+            //chase again
+            enemyState=EnemyState.CHASE;
+        }
     }
 
     void chase()
@@ -106,7 +121,7 @@ public class ghost_attack : MonoBehaviour
         //is the player really close?
         if (Vector3.Distance(transform.position, target.position) <= attackDistance)
         {
-            enemyState = EnemyState.CHASE;
+            enemyState = EnemyState.ATTACK;
             //reset chase distance
             if (chaseDistance != currentChaseDistance)
             {

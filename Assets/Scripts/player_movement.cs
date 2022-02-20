@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class player_movement : MonoBehaviour
 {
     private CharacterController characterController;
@@ -12,6 +13,7 @@ public class player_movement : MonoBehaviour
     
     void Awake() {
         characterController = GetComponent<CharacterController>();
+        
     }
 
     // Update is called once per frame
@@ -28,4 +30,15 @@ public class player_movement : MonoBehaviour
 
         characterController.Move(direction);
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.gameObject.CompareTag("Ghost"))
+        {
+            GetComponent<player_movement>().enabled = false;
+            FindObjectOfType<game_manager>().GameOver();
+        }
+    }
+
+    
 }

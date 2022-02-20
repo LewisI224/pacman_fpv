@@ -23,7 +23,7 @@ public class player_look : MonoBehaviour
     private float smoothWeight = 0.4f;
 
     [SerializeField]
-    private float rollAngle = 10f;
+    private float rollAngle = 0f;
 
     [SerializeField]
     private float rollSpeed = 3f;
