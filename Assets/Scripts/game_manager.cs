@@ -6,13 +6,15 @@ public class game_manager : MonoBehaviour
     public GameObject gameOverScreen;
     private AudioSource dieSound;
     public AudioClip dieClip;
-    bool gameEnded = false;
+    public static bool gameEnded = false;
+
     public void GameOver()
     {
         if (gameEnded == false)
-        {   
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Time.timeScale = 0f;
             gameEnded = true;  
-            print("GAME OVER");
             dieSound = GetComponent<AudioSource>();
             dieSound.clip = dieClip;
             dieSound.Play();

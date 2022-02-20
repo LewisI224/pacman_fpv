@@ -37,6 +37,7 @@ public class player_look : MonoBehaviour
 
     private float currentRollAngle;
     private int lastLookFrame;
+    private bool gamePaused = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -45,8 +46,9 @@ public class player_look : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() {
-        LockState();
+    void Update()
+    {
+
         if (Cursor.lockState == CursorLockMode.Locked)
         {
             Look();
