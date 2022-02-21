@@ -9,8 +9,7 @@ public class player_sprint : MonoBehaviour
     public float sprintSpeed = 10f;
     public float moveSpeed = 5f;
 
-    private player_move_sounds playerFootsteps;
-    private float volume = 0.6f;
+
     private float stepDistMove = 0.4f;
     private float stepDistSprint = 0.25f;
 
@@ -18,15 +17,6 @@ public class player_sprint : MonoBehaviour
     void Awake()
     {
         playerMovement = GetComponent<player_movement>();
-        playerFootsteps = GetComponentInChildren<player_move_sounds>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerFootsteps.volume = volume;
-        playerFootsteps.stepDist = stepDistMove;
-        playerFootsteps.footstepClip = playerFootsteps.footstepClips[0];
     }
 
     // Update is called once per frame
@@ -41,18 +31,12 @@ public class player_sprint : MonoBehaviour
         {
             playerMovement.speed = sprintSpeed;
 
-            playerFootsteps.stepDist = stepDistSprint;
-            playerFootsteps.volume = volume;
-            playerFootsteps.footstepClip = playerFootsteps.footstepClips[1];
+
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             playerMovement.speed = moveSpeed;
-
-            playerFootsteps.stepDist = stepDistMove;
-            playerFootsteps.volume = volume;
-            playerFootsteps.footstepClip = playerFootsteps.footstepClips[0];
         }
     }
 }
