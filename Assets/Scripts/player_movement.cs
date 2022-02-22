@@ -8,7 +8,8 @@ public class player_movement : MonoBehaviour
     private CharacterController characterController;
 
     private Vector3 direction;
-
+    public float gravity = 20f;
+    private float verticalVelocity;
     public float speed = 5f;
     
     void Awake() {
@@ -27,8 +28,15 @@ public class player_movement : MonoBehaviour
         direction = transform.TransformDirection(direction);
 
         direction *= speed * Time.deltaTime;
-
+        applyGravity();
         characterController.Move(direction);
+    }
+
+    void applyGravity()
+    {
+        verticalVelocity -= gravity;
+        direction.y = verticalVelocity;
+
     }
 
     void OnCollisionEnter(Collision collision)

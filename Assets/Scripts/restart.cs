@@ -7,9 +7,10 @@ public class restart : MonoBehaviour
 {
     public void Restart()
     {
+        Time.timeScale = 1f;
         game_manager.gameEnded = false;
         game_manager.gameWon = false;
-        game_manager.pillsLeft = 1;
+        game_manager.pillsLeft = game_manager.totalPills;
         game_manager.score = 0;
         SceneManager.LoadScene("SampleScene");
     }

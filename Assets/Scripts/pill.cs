@@ -23,7 +23,11 @@ public class pill : MonoBehaviour
     {
         if(collider.gameObject.tag == "Player")
         {
-            sound.Play();
+            if (!sound.isPlaying)
+            {
+                sound.Play();
+            }
+            
             game_manager.score += 50;
             game_manager.pillsLeft -= 1;
             Destroy(gameObject);

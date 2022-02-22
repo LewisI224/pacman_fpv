@@ -12,10 +12,17 @@ public class game_manager : MonoBehaviour
     public GameObject scoreText;
     public static int score;
     public GameObject pillsText;
-    public static int pillsLeft = 1;
+    public static int totalPills;
+    public static int pillsLeft;
 
     private AudioSource dieSound;
     public static bool gameEnded = false;
+
+    void Start()
+    {
+        totalPills = GameObject.FindGameObjectsWithTag("Pill").Length;
+        pillsLeft = totalPills;
+    }
 
     public void GameOver()
     {
