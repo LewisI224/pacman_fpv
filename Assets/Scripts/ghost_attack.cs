@@ -10,6 +10,9 @@ public enum EnemyState
 public class ghost_attack : MonoBehaviour
 {
     private NavMeshAgent navAgent;
+    public GameObject player;
+    public float playerDistanceLimit = 10f;
+
     private EnemyState enemyState;
 
     public float walkSpeed = 1f;
@@ -20,8 +23,8 @@ public class ghost_attack : MonoBehaviour
     public float attackDistance = 1.8f;
     public float chaseAfterAttackDistance = 2f;
 
-    public float patrolRadiusMin = 20f;
-    public float patrolRadiusMax = 60f;
+    public float patrolRadiusMin = 60f;
+    public float patrolRadiusMax = 120f;
     public float patrolTime = 15f;
     public float patrolTimer;
 
@@ -29,6 +32,9 @@ public class ghost_attack : MonoBehaviour
     public float waitBeforeAttack;
 
     private Transform target;
+
+    private Vector3 startPos;
+    public static bool blinkOn = false;
 
     void Awake()
     {
@@ -44,25 +50,34 @@ public class ghost_attack : MonoBehaviour
         patrolTimer = patrolTime;
         attackTimer = waitBeforeAttack;
         currentChaseDistance = chaseDistance;
+        startPos = transform.position;
 
 
     }
 
     // Update is called once per frame
     void Update()
-    {   
-        if(enemyState == EnemyState.PATROL)
+    {
+        if (game_manager.gameState == game_manager.GameState.TIMEREND)
         {
-            patrol();
+            game_manager.gameState = game_manager.GameState.NORMAL;
+            enemyState = EnemyState.PATROL;
         }
+        if (game_manager.gameState == game_manager.GameState.NORMAL)
+        {
+            if (enemyState == EnemyState.PATROL)
+            {
+                patrol();
+            }
 
-        if (enemyState == EnemyState.ATTACK)
-        {
-            attack();
-        }
-        if (enemyState == EnemyState.CHASE)
-        {
-            chase();
+            if (enemyState == EnemyState.ATTACK)
+            {
+                attack();
+            }
+            if (enemyState == EnemyState.CHASE)
+            {
+                chase();
+            }
         }
     }
 
@@ -141,6 +156,7 @@ public class ghost_attack : MonoBehaviour
 
     }
 
+
     void setNewDest()
     {   
         //get a random radius between min and max
@@ -154,5 +170,22 @@ public class ghost_attack : MonoBehaviour
         NavMesh.SamplePosition(randDir, out navHit, randRadius, -1);
         navAgent.SetDestination(navHit.position);
 
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.gameObject.CompareTag("Player") && game_manager.gameState == game_manager.GameState.EATGHOSTS)
+        {
+            game_manager.score += 150;
+            gameObject.SetActive(false);
+            transform.position = startPos;
+            gameObject.SetActive(true);
+
+
+        }
+        else if (collision.collider.gameObject.CompareTag("Ghost"))
+        {
+            enemyState = EnemyState.PATROL;
+        }
     }
 }

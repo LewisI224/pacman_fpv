@@ -5,7 +5,6 @@ using UnityEngine;
 public class pill : MonoBehaviour
 {
     public AudioSource sound;
-    public static bool powerUp;
     public float speed = 1.0f;
 
     public float amplitude = 0.5f;
@@ -28,7 +27,7 @@ public class pill : MonoBehaviour
                 sound.Play();
             }
             
-            game_manager.score += 50;
+            game_manager.score += 10;
             game_manager.pillsLeft -= 1;
             Destroy(gameObject);
         }
@@ -40,5 +39,7 @@ public class pill : MonoBehaviour
         tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
 
         transform.position = tempPos;
+
+        
     }
 }

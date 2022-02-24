@@ -11,10 +11,14 @@ public class player_movement : MonoBehaviour
     public float gravity = 20f;
     private float verticalVelocity;
     public float speed = 5f;
-    
+    public GameObject player;
+
+    public AudioSource dieSound;
+    private Vector3 startPos;
+
     void Awake() {
         characterController = GetComponent<CharacterController>();
-        
+        startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -41,10 +45,25 @@ public class player_movement : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.CompareTag("Ghost"))
+        if (collision.collider.gameObject.CompareTag("Ghost") && game_manager.gameState == game_manager.GameState.NORMAL)
         {
-            GetComponent<player_movement>().enabled = false;
-            FindObjectOfType<game_manager>().GameOver();
+            game_manager.lives -= 1;
+            
+            if (game_manager.lives == 0)
+            {
+                GetComponent<player_movement>().enabled = false;
+                FindObjectOfType<game_manager>().GameOver();
+            }
+            else
+            {
+                player.SetActive(false);
+                transform.position = startPos;
+                player.SetActive(true);
+            }
+            dieSound = GetComponent<AudioSource>();
+            dieSound.Play();
+
+
         }
     }
 
