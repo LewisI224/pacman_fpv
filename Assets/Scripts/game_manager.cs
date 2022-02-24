@@ -49,7 +49,7 @@ public class game_manager : MonoBehaviour
     void Start()
     {
         totalPills = GameObject.FindGameObjectsWithTag("Pill").Length;
-        pillsLeft = 14;
+        pillsLeft = totalPills;
         gameState = GameState.NORMAL;
         timer.GetComponent<Text>().text = "";
         StartCoroutine(text());
